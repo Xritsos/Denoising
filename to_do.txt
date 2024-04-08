@@ -1,0 +1,11 @@
+1) find noise to implement
+
+2) add noise to the existing noising function
+
+3) visualize the noisy vs the original image
+
+4) find architecture
+
+5) clean code
+
+6) find metrics for denoising
