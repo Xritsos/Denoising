@@ -1,3 +1,8 @@
+Make training messaging appear in one line with steps + losses (look for ideas)
+
+Find how to properly use training validation loops (Does the model instance 
+changes inside or you should get it from training loop and pass it to val loop)
+
 1) find noise to implement
 
 2) add noise to the existing noising function
@@ -9,3 +14,6 @@
 5) clean code
 
 6) find metrics for denoising
+
+7) find all the parameters you will test and create a csv file make the pipeline
+take input from this file
