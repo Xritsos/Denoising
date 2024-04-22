@@ -1,19 +1,25 @@
-Make training messaging appear in one line with steps + losses (look for ideas)
-
-Find how to properly use training validation loops (Does the model instance 
-changes inside or you should get it from training loop and pass it to val loop)
+## Find how to compute output size depth and width x height after each convolution
 
 1) find noise to implement
-
+    
 2) add noise to the existing noising function
+    - add three noises with randomness (worst case an image has 3 noise types)
 
 3) visualize the noisy vs the original image
 
 4) find architecture
+    - one architecture for FullyCNN
+    - one architecture with CNN, maxpooling and linear layer at the end
 
 5) clean code
 
 6) find metrics for denoising
+    - find possible metrics that measure noise
+    - find a cifar-10 trained model to evaluate the different architectures: 
+        if the classifier is able to detect more images from one architecture
 
 7) find all the parameters you will test and create a csv file make the pipeline
 take input from this file
+
+
+##### Finally Re-run pipreqs to get all packages ##########
