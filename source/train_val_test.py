@@ -19,13 +19,14 @@ def train(net, train_loader, optimizer, loss_fn, device):
         running_loss += loss.item()
         step += 1
         
-        print(f"Step {step}/{len(train_loader)}")
-        
         if step < len(train_loader):
+            print(f"Train Step {step}/{len(train_loader)}")
             print(LINE_UP, end=LINE_CLEAR)
     
     train_loss = running_loss / len(train_loader)
-
+    
+    print(f"Train Step {step}/{len(train_loader)} --- Train Loss: {train_loss}")
+    
     return train_loss
 
 
@@ -42,13 +43,14 @@ def val(net, val_loader, loss_fn, device):
             loss = loss_fn(output, img)
             running_loss += loss.item()
             step += 1
-        
-            print(f"Step {step}/{len(val_loader)}")
             
             if step < len(val_loader):
+                print(f" Val Step {step}/{len(val_loader)}")
                 print(LINE_UP, end=LINE_CLEAR)
             
         val_loss = running_loss / len(val_loader)
+        
+    print(f"Val Step {step}/{len(val_loader)} ------- Val Loss:   {val_loss}")
     
     return val_loss
 
