@@ -11,14 +11,16 @@ from train_val_test import train, val, test
 
 
 def main():
-    EPOCHS = 300
-    BATCH = 128
+    EPOCHS = 100
+    BATCH = 256
     LR = 1e-3
+    VAL_SIZE = 5000
+    
     torch.manual_seed(7)
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    train_loader, val_loader, test_loader, _ = data_load(validation_size=49000,
+    train_loader, val_loader, test_loader, _ = data_load(validation_size=VAL_SIZE,
                                                          batch_size=BATCH, 
                                                          visualize_split=False)
     print()
@@ -36,31 +38,25 @@ def main():
     for epoch in range(EPOCHS):
         print()
         print(f"============ In Epoch {epoch+1}/{EPOCHS} ==================")
-        print("Training....")
+        
         start_train_time = time.time()
+        
         tr_loss = train(model, train_loader, optimizer, loss_fn, device)
+        
         end_train_time = time.time()
         train_loss.append(tr_loss)
         
         train_time = round(end_train_time - start_train_time, 2)
         
-        print()
-        print("Validating...")
         start_val_time = time.time()
+        
+        
         val_loss = val(model, val_loader, loss_fn, device)
+        
         end_val_time = time.time()
         validation_loss.append(val_loss)
         
         val_time = round(end_val_time - start_val_time, 2)
-        
-        print()
-        print(f"Trainset Loss: {tr_loss}")
-        print(f"Validation Loss: {val_loss}")
-        
-        print()
-        print(f"Train epoch time: {train_time} s")
-        print()
-        print(f"Validation epoch time: {val_time} s")
         
         end_epoch_time = time.time()
         epoch_time = round(end_epoch_time - start_train_time, 2)
@@ -69,11 +65,11 @@ def main():
         
     end_total_time = time.time()
     
-    total_time = round(end_total_time - start_total_time, 2)
+    total_time = round((end_total_time - start_total_time) / 60, 2)
     
     print()
     print("==========================================================")
-    print(f"========= Total Runtime {total_time} seconds !===========")
+    print(f"========= Total Runtime {total_time} minutes !===========")
     print("==========================================================")
     
     epochs = [i for i in range(1, EPOCHS + 1)]
