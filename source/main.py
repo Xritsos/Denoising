@@ -11,7 +11,7 @@ from train_val_test import train, val, test
 
 
 def main():
-    EPOCHS = 100
+    EPOCHS = 10
     BATCH = 256
     LR = 1e-3
     VAL_SIZE = 5000
@@ -30,6 +30,8 @@ def main():
     model = AutoEncoder().to(device)
     
     loss_fn = nn.MSELoss()
+    loss_fn.to(device)
+    
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
     
     train_loss = []
@@ -44,7 +46,7 @@ def main():
         tr_loss = train(model, train_loader, optimizer, loss_fn, device)
         
         end_train_time = time.time()
-        train_loss.append(tr_loss)
+        train_loss.append(float(tr_loss.cpu()))
         
         train_time = round(end_train_time - start_train_time, 2)
         
@@ -54,7 +56,7 @@ def main():
         val_loss = val(model, val_loader, loss_fn, device)
         
         end_val_time = time.time()
-        validation_loss.append(val_loss)
+        validation_loss.append(float(val_loss.cpu()))
         
         val_time = round(end_val_time - start_val_time, 2)
         
@@ -79,7 +81,6 @@ def main():
     plt.plot(epochs, validation_loss, label='Validation Loss')
     
     plt.xlabel('Number of Epochs')
-    # plt.xticks(epochs)
     plt.ylabel('Loss')
     plt.suptitle('Losses')
     plt.legend()
