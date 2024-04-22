@@ -3,76 +3,34 @@ from torch import nn
 import torch.nn.functional as F
 
 
-class Encoder(nn.Module):
-
-    def __init__(self,
-                 num_input_channels : int,
-                 base_channel_size : int,
-                 latent_dim : int,
-                 act_fn : object = nn.GELU):
-        """
-        Inputs:
-            - num_input_channels : Number of input channels of the image. For CIFAR, this parameter is 3
-            - base_channel_size : Number of channels we use in the first convolutional layers. Deeper layers might use a duplicate of it.
-            - latent_dim : Dimensionality of latent representation z
-            - act_fn : Activation function used throughout the encoder network
-        """
-        super().__init__()
-        c_hid = base_channel_size
-        self.net = nn.Sequential(
-            nn.Conv2d(num_input_channels, c_hid, kernel_size=3, padding=1, stride=2), # 32x32 => 16x16
-            act_fn(),
-            nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
-            act_fn(),
-            nn.Conv2d(c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 16x16 => 8x8
-            act_fn(),
-            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1),
-            act_fn(),
-            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 8x8 => 4x4
-            act_fn(),
-            nn.Flatten(), # Image grid to single feature vector
-            nn.Linear(2*16*c_hid, latent_dim)
-        )
-
+class AutoEncoder(nn.Module):
+    def __init__(self):
+        super(AutoEncoder, self).__init__()
+        
+        # encoder
+        self.enc1 = nn.Conv2d(in_channels=3, out_channels=8, kernel_size=(3, 3), 
+                              stride=(1, 1), padding=0, dilation=1, groups=1, 
+                              bias=True, padding_mode='zeros')
+        
+        self.enc2 = nn.Conv2d(in_channels=8, out_channels=4, kernel_size=(3, 3), 
+                              stride=(1, 1), padding=0, dilation=1, groups=1, 
+                              bias=True, padding_mode='zeros')
+        
+        # decoder 
+        self.dec1 = nn.ConvTranspose2d(in_channels=4, out_channels=8, 
+                                       kernel_size=(3, 3), stride=1, padding=0, 
+                                       output_padding=0, groups=1, bias=True, 
+                                       dilation=1, padding_mode='zeros')
+        
+        self.dec2 = nn.ConvTranspose2d(in_channels=8, out_channels=3, 
+                                       kernel_size=(3, 3), stride=1, padding=0, 
+                                       output_padding=0, groups=1, bias=True, 
+                                       dilation=1, padding_mode='zeros')
+        
     def forward(self, x):
-        return self.net(x)
-
-
-class Decoder(nn.Module):
-
-    def __init__(self,
-                 num_input_channels : int,
-                 base_channel_size : int,
-                 latent_dim : int,
-                 act_fn : object = nn.GELU):
-        """
-        Inputs:
-            - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
-            - base_channel_size : Number of channels we use in the last convolutional layers. Early layers might use a duplicate of it.
-            - latent_dim : Dimensionality of latent representation z
-            - act_fn : Activation function used throughout the decoder network
-        """
-        super().__init__()
-        c_hid = base_channel_size
-        self.linear = nn.Sequential(
-            nn.Linear(latent_dim, 2*16*c_hid),
-            act_fn()
-        )
-        self.net = nn.Sequential(
-            nn.ConvTranspose2d(2*c_hid, 2*c_hid, kernel_size=3, output_padding=1, padding=1, stride=2), # 4x4 => 8x8
-            act_fn(),
-            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1),
-            act_fn(),
-            nn.ConvTranspose2d(2*c_hid, c_hid, kernel_size=3, output_padding=1, padding=1, stride=2), # 8x8 => 16x16
-            act_fn(),
-            nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
-            act_fn(),
-            nn.ConvTranspose2d(c_hid, num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2), # 16x16 => 32x32
-            nn.Tanh() # The input images is scaled between -1 and 1, hence the output has to be bounded as well
-        )
-
-    def forward(self, x):
-        x = self.linear(x)
-        x = x.reshape(x.shape[0], -1, 4, 4)
-        x = self.net(x)
+        x = F.relu(self.enc1(x))
+        x = F.relu(self.enc2(x))
+        x = F.relu(self.dec1(x))
+        x = F.relu(self.dec2(x))
+        
         return x
