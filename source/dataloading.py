@@ -46,17 +46,20 @@ def data_load(validation_size=10000, batch_size=256, visualize_split=False):
     train_loader = DataLoader(train_set, batch_size, 
                               shuffle=True, 
                               num_workers=7,
+                              prefetch_factor=2,
                               persistent_workers=True, 
                               pin_memory=True)
     
     val_loader = DataLoader(val_set, batch_size,
                             shuffle=True, 
                             num_workers=7,
+                            prefetch_factor=2,
                             persistent_workers=True, 
                             pin_memory=True)
     
     test_loader = DataLoader(test_set, batch_size, 
                              num_workers=7,
+                             prefetch_factor=2,
                              persistent_workers=True, 
                              pin_memory=True)
     
