@@ -10,6 +10,8 @@
 4) find architecture
     - one architecture for FullyCNN
     - one architecture with CNN, maxpooling and linear layer at the end
+    - check if you model's output matches the expected input for the loss function
+    - check what other possible denoising loss functions are used
 
 5) clean code
 
