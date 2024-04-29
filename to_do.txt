@@ -1,11 +1,14 @@
 ## Find how to compute output size depth and width x height after each convolution
-
-1) find noise to implement
+$$$$$$$$$$ MAKE SURE LOSS IS COMPUTED ON INITIAL IMAGE AND DECODED NOT NOISY
+find noise to implement (DONE)
+    - gaussian white noise (additive) OK
+    - poisson noise (additive)        OK
+    - speckle noise (multiplicative)  OK
     
-2) add noise to the existing noising function
-    - add three noises with randomness (worst case an image has 3 noise types)
+add noise to the existing noising function (DONE)
+    - (worst case an image has 3 noise types) (under consideration)
 
-3) visualize the noisy vs the original image
+visualize the noisy vs the original image (DONE)
 
 4) find architecture
     - one architecture for FullyCNN
@@ -22,6 +25,11 @@
 
 7) find all the parameters you will test and create a csv file make the pipeline
 take input from this file
+
+
+## Data loading from CIFAR-10 are in range [0, 1], with the Normalization
+transformation data are in range [-1, 1], so if you want to change the 
+normalization make sure you clip the images correctly in the noisy.py
 
 
 ##### Finally Re-run pipreqs to get all packages ##########
