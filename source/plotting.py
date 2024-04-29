@@ -152,3 +152,95 @@ def visualize_sets(train_set, val_set, test_set, classes):
 
     # Show Plot
     plt.show()
+    
+    
+def plot_images_kdes():
+    fig, axs = plt.subplots(1, 4)
+    axs[0].imshow(inputs.cpu())
+    axs[0].set_title("Initial RGB Image")
+    axs[0].set_yticklabels([])
+    axs[0].set_xticklabels([])
+    axs[0].set_yticks([])
+    axs[0].set_xticks([])
+
+    axs[1].imshow(multi_noisy.cpu())
+    axs[1].set_title(f"Multiplicative Noise mean={multi_mean}, std={multi_std}")
+    axs[1].set_yticklabels([])
+    axs[1].set_xticklabels([])
+    axs[1].set_yticks([])
+    axs[1].set_xticks([])
+
+    axs[2].imshow(gauss_noisy.cpu())
+    axs[2].set_title(f"Gaussian Noise mean={g_mean}, std={g_std}")
+    axs[2].set_yticklabels([])
+    axs[2].set_xticklabels([])
+    axs[2].set_yticks([])
+    axs[2].set_xticks([])
+
+    axs[3].imshow(poisson_noisy.cpu())
+    axs[3].set_title(f"Poisson Noise")
+    axs[3].set_yticklabels([])
+    axs[3].set_xticklabels([])
+    axs[3].set_yticks([])
+    axs[3].set_xticks([])
+
+    plt.show()
+
+
+    fig, ax = plt.subplots(1, 4, sharey=True)
+
+    ax[0].set_title("Initial RGB Image")
+    sns.kdeplot(inputs[:, :, 0].cpu().numpy().reshape((-1)), 
+            ax=ax[0], color='red', label='Red Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(inputs[:, :, 1].cpu().numpy().reshape((-1)), 
+            ax=ax[0], color='green', label='Green Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(inputs[:, :, 2].cpu().numpy().reshape((-1)), 
+            ax=ax[0], color='blue', label='Blue Channel').set(xlim=(0, 1))
+
+    ax[0].legend()
+
+
+    ax[1].set_title(f"Multiplicative Noise mean={multi_mean}, std={multi_std}")
+    sns.kdeplot(multi_noisy[:, :, 0].cpu().numpy().reshape((-1)), 
+            ax=ax[1], color='red', label='Red Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(multi_noisy[:, :, 1].cpu().numpy().reshape((-1)), 
+            ax=ax[1], color='green', label='Green Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(multi_noisy[:, :, 2].cpu().numpy().reshape((-1)), 
+            ax=ax[1], color='blue', label='Blue Channel').set(xlim=(0, 1))
+        
+    ax[1].legend()
+
+
+    ax[2].set_title(f"Gaussian Noise mean={g_mean}, std={g_std}")
+    sns.kdeplot(gauss_noisy[:, :, 0].cpu().numpy().reshape((-1)), 
+            ax=ax[2], color='red', label='Red Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(gauss_noisy[:, :, 1].cpu().numpy().reshape((-1)), 
+            ax=ax[2], color='green', label='Green Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(gauss_noisy[:, :, 2].cpu().numpy().reshape((-1)), 
+            ax=ax[2], color='blue', label='Blue Channel').set(xlim=(0, 1))
+
+    ax[2].legend()
+        
+
+    ax[3].set_title(f"Poisson Noise")
+    sns.kdeplot(poisson_noisy[:, :, 0].cpu().numpy().reshape((-1)), 
+            ax=ax[3], color='red', label='Red Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(poisson_noisy[:, :, 1].cpu().numpy().reshape((-1)), 
+            ax=ax[3], color='green', label='Green Channel').set(xlim=(0, 1))
+
+    sns.kdeplot(poisson_noisy[:, :, 2].cpu().numpy().reshape((-1)), 
+            ax=ax[3], color='blue', label='Blue Channel').set(xlim=(0, 1))
+
+    ax[3].legend()
+
+    plt.suptitle("Color Distribution")
+    fig.text(0.5, 0.04, 'Normalized Color Value', ha='center')
+
+    plt.show()
