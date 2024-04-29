@@ -2,6 +2,8 @@ import torch
 from matplotlib import pyplot as plt
 import torchvision.transforms as transforms
 
+from noisy import add_noise
+
 LINE_UP = '\033[1A'
 LINE_CLEAR = '\x1b[2K'
 
@@ -11,7 +13,7 @@ def train(net, train_loader, optimizer, loss_fn, device):
     step = 0
     for img, _ in train_loader:
         img = img.to(device)
-        # image_noisy = add_noise(image_batch,noise_factor)
+        image_noisy = add_noise(img)
         # image_noisy = image_noisy.to(device)
         optimizer.zero_grad()
         output = net(img).to(device)
@@ -58,22 +60,24 @@ def val(net, val_loader, loss_fn, device):
 
 
 def test(net, test_loader, device):
-    net.eval()
-    MEAN = torch.tensor([0.5, 0.5, 0.5]).to(device)
-    STD = torch.tensor([0.5, 0.5, 0.5]).to(device)
     
-    with torch.no_grad():
-        for img, _ in test_loader:
-            img = img.to(device)
-            output = net(img).to(device)
+    raise ValueError("Forgot to change the MEAN and STD values based on the normalization chosen!")
+    # net.eval()
+    # MEAN = torch.tensor([0.5, 0.5, 0.5]).to(device)
+    # STD = torch.tensor([0.5, 0.5, 0.5]).to(device)
+    
+    # with torch.no_grad():
+    #     for img, _ in test_loader:
+    #         img = img.to(device)
+    #         output = net(img).to(device)
             
-            img = img[33] * STD[:, None, None] + MEAN[:, None, None]
-            img = img.permute(1, 2, 0).cpu()
+    #         img = img[33] * STD[:, None, None] + MEAN[:, None, None]
+    #         img = img.permute(1, 2, 0).cpu()
             
-            fig, axs = plt.subplots(1, 2, figsize=(10, 10))
-            axs[0].imshow(img)
-            axs[1].imshow(output[33].permute(1, 2, 0).cpu().numpy())
+    #         fig, axs = plt.subplots(1, 2, figsize=(10, 10))
+    #         axs[0].imshow(img)
+    #         axs[1].imshow(output[33].permute(1, 2, 0).cpu().numpy())
             
-            plt.show()
-            exit()
+    #         plt.show()
+    #         exit()
         
