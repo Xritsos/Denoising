@@ -12,9 +12,9 @@ def data_load(validation_size=10000, batch_size=256, visualize_split=False):
     
     torch.manual_seed(7)
     
-    transform = transforms.Compose([transforms.ToTensor(), 
-                                    transforms.Normalize(mean=(0.5, 0.5, 0.5), 
-                                                         std=(0.5, 0.5, 0.5))])
+    transform = transforms.Compose([transforms.ToTensor()])
+                                    # transforms.Normalize(mean=(0.5, 0.5, 0.5), 
+                                    #                      std=(0.5, 0.5, 0.5))])
     
     data_set = torchvision.datasets.CIFAR10(root='./data', 
                                             train=True,
