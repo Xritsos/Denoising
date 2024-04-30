@@ -75,7 +75,7 @@ def val(net, val_loader, loss_fn, device):
 def test(net, test_loader, device):
     
     # raise ValueError("Forgot to change the MEAN and STD values based on the normalization chosen!")
-    net.eval()
+    # net.eval()
     # MEAN = torch.tensor([0.5, 0.5, 0.5]).to(device)
     # STD = torch.tensor([0.5, 0.5, 0.5]).to(device)
     
