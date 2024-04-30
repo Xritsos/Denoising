@@ -14,8 +14,8 @@ from train_val_test import train, val, test
 
 def main():
     test_id = 1 # it will be read from file automatically
-    EPOCHS = 30
-    BATCH = 256
+    EPOCHS = 100
+    BATCH = 128
     LR = 1e-3
     VAL_SIZE = 5000
     SAVE_PATH = f'/home/akahige/Python Work/Denoising/archive/model_ckpts/fully_cnn_{test_id}/'
@@ -113,8 +113,9 @@ def main():
         
         
     # load best model for testing
-    model = torch.load(f'{SAVE_PATH}{test_id}.pt')
-    test(model, test_loader, device)
+    # model = AutoEncoder().to(device)
+    # model.load_state_dict(torch.load(f'{SAVE_PATH}{test_id}.pt')
+    # test(model, test_loader, device)
     
     
 if __name__ == "__main__":
