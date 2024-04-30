@@ -14,7 +14,7 @@ from train_val_test import train, val, test
 
 def main():
     test_id = 1 # it will be read from file automatically
-    EPOCHS = 3
+    EPOCHS = 30
     BATCH = 256
     LR = 1e-3
     VAL_SIZE = 5000
@@ -111,6 +111,9 @@ def main():
     plt.savefig(f'{SAVE_PATH}{test_id}_loss.png')
     plt.show()
         
+        
+    # load best model for testing
+    model = torch.load(f'{SAVE_PATH}{test_id}.pt')
     test(model, test_loader, device)
     
     
