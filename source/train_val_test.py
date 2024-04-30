@@ -1,6 +1,6 @@
 import torch
+from torchviz import make_dot
 from matplotlib import pyplot as plt
-import torchvision.transforms as transforms
 
 from noisy import add_noise
 
@@ -14,9 +14,9 @@ def train(net, train_loader, optimizer, loss_fn, device):
     for img, _ in train_loader:
         img = img.to(device)
         image_noisy = add_noise(img)
-        # image_noisy = image_noisy.to(device)
+        image_noisy = image_noisy.to(device)
         optimizer.zero_grad()
-        output = net(img).to(device)
+        output = net(image_noisy).to(device)
         loss = loss_fn(output, img).to(device)
         loss.backward()
         optimizer.step()
@@ -41,9 +41,9 @@ def val(net, val_loader, loss_fn, device):
         step = 0
         for img, _ in val_loader:
             img = img.to(device)
-            # image_noisy = add_noise(image_batch,noise_factor)
-            # image_noisy = image_noisy.to(device)
-            output = net(img).to(device)
+            image_noisy = add_noise(img)
+            image_noisy = image_noisy.to(device)
+            output = net(image_noisy).to(device)
             loss = loss_fn(output, img).to(device)
             running_loss += loss.item()
             step += 1
@@ -61,23 +61,25 @@ def val(net, val_loader, loss_fn, device):
 
 def test(net, test_loader, device):
     
-    raise ValueError("Forgot to change the MEAN and STD values based on the normalization chosen!")
-    # net.eval()
+    # raise ValueError("Forgot to change the MEAN and STD values based on the normalization chosen!")
+    net.eval()
     # MEAN = torch.tensor([0.5, 0.5, 0.5]).to(device)
     # STD = torch.tensor([0.5, 0.5, 0.5]).to(device)
     
-    # with torch.no_grad():
-    #     for img, _ in test_loader:
-    #         img = img.to(device)
-    #         output = net(img).to(device)
+    with torch.no_grad():
+        for img, _ in test_loader:
+            img = img.to(device)
+            noisy = add_noise(img)
+            output = net(noisy).to(device)
             
-    #         img = img[33] * STD[:, None, None] + MEAN[:, None, None]
-    #         img = img.permute(1, 2, 0).cpu()
-            
-    #         fig, axs = plt.subplots(1, 2, figsize=(10, 10))
-    #         axs[0].imshow(img)
-    #         axs[1].imshow(output[33].permute(1, 2, 0).cpu().numpy())
-            
-    #         plt.show()
-    #         exit()
+            # img = img[33] * STD[:, None, None] + MEAN[:, None, None]
+            # img = noisy[33]
+            # img = img.permute(1, 2, 0).cpu()
+            for i in range(img.shape[0]):
+                fig, axs = plt.subplots(1, 3, figsize=(10, 10))
+                axs[0].imshow(img[i, :, :, :].permute(1, 2, 0).cpu())
+                axs[1].imshow(noisy[i, :, :, :].permute(1, 2, 0).cpu())
+                axs[2].imshow(output[i, :, :, :].permute(1, 2, 0).cpu())
+                plt.show()
+            exit()
         
