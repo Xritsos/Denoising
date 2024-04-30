@@ -1,20 +1,24 @@
-## Find how to compute output size depth and width x height after each convolution
-$$$$$$$$$$ MAKE SURE LOSS IS COMPUTED ON INITIAL IMAGE AND DECODED NOT NOISY
+
 find noise to implement (DONE)
     - gaussian white noise (additive) OK
     - poisson noise (additive)        OK
     - speckle noise (multiplicative)  OK
     
 add noise to the existing noising function (DONE)
-    - (worst case an image has 3 noise types) (under consideration)
+    - (worst case an image has 3 noise types) (only two types to be kept)
 
 visualize the noisy vs the original image (DONE)
 
 4) find architecture
-    - one architecture for FullyCNN
+    - one architecture for FullyCNN (DONE)
     - one architecture with CNN, maxpooling and linear layer at the end
-    - check if you model's output matches the expected input for the loss function
+    - check if you model's output matches the expected input for the loss function (DONE)
     - check what other possible denoising loss functions are used
+
+#### SAVE MODEL BY LOSS ### (DONE)
+
+4) create anew plots with clean and noisy images with all combinations, along
+with the kdeplots
 
 5) clean code
 
