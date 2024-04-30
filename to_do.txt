@@ -24,6 +24,9 @@ with the kdeplots
 
 6) find metrics for denoising
     - find possible metrics that measure noise
+        - PSNR (IMPLEMENTED)
+        - MS-SSIM
+        - SSIM
     - find a cifar-10 trained model to evaluate the different architectures: 
         if the classifier is able to detect more images from one architecture
 
