@@ -38,7 +38,7 @@ def train(net, train_loader, optimizer, loss_fn, device):
     
     print(f"Train Step {step}/{len(train_loader)} --- Train Loss: {float(train_loss.cpu())} ---- Train PSNR: {float(psnr_score.cpu())}")
     
-    return train_loss
+    return train_loss, psnr_score
 
 
 def val(net, val_loader, loss_fn, device):
@@ -69,7 +69,7 @@ def val(net, val_loader, loss_fn, device):
         
     print(f"Val Step {step}/{len(val_loader)} ------- Val Loss:   {float(val_loss.cpu())} ---- Val PSNR: {float(psnr_score.cpu())}")
     
-    return val_loss
+    return val_loss, psnr_score
 
 
 def test(net, test_loader, device):
