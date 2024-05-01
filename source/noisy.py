@@ -1,12 +1,11 @@
 import torch
 import numpy as np
 import seaborn as sns
+from random import randint
 from matplotlib import pyplot as plt
 
 
-@torch.jit.script
 def add_gaussian(img, mean, sigma):
-	torch.manual_seed(7)
  
 	noisy = torch.clone(img).to(img.device)
 
@@ -30,9 +29,8 @@ def add_gaussian(img, mean, sigma):
 #     return noisy
 
 
-@torch.jit.script
+
 def add_multiplicative(img, mean, sigma):
-	torch.manual_seed(7)
 
 	noisy = torch.clone(img).to(img.device)
 	noise = torch.normal(mean=mean, std=sigma, size=noisy.shape).to(img.device)
@@ -43,31 +41,30 @@ def add_multiplicative(img, mean, sigma):
 	return noisy
 
 
-@torch.jit.script
 def add_noise(batch):
-	torch.manual_seed(7)
  
 	noisy_batch = torch.clone(batch).to(batch.device)
  
-	multi_mean = torch.tensor(1.0)
-	multi_sigma = torch.tensor(0.5)
-	gauss_mean = torch.tensor(0.2)
-	gauss_sigma = torch.tensor(0.2)
+	multi_mean = torch.tensor(0.5)
+	multi_sigma = torch.tensor(0.3)
+	gauss_mean = torch.tensor(0.3)
+	gauss_sigma = torch.tensor(0.05)
  
 	for i in range(noisy_batch.shape[0]):
 		inputs = batch[i, :, :, :].to(batch.device)
-		index = torch.randint(low=1, high=4, size=[1]).to(batch.device)
+		
+		index = randint(1, 4)
   
 		if index == 1:
-			noisy = add_multiplicative(inputs, mean=multi_mean, sigma=multi_sigma)
+			noisy = add_multiplicative(inputs, mean=0.8, sigma=0.5)
 		elif index == 2:
-			noisy = add_gaussian(inputs, mean=gauss_mean, sigma=gauss_sigma)
+			noisy = add_gaussian(inputs, mean=0.3, sigma=0.05)
 		elif index == 3:
-			noisy = add_multiplicative(inputs, mean=multi_mean, sigma=multi_sigma)
-			noisy = add_gaussian(noisy, mean=gauss_mean, sigma=gauss_sigma)
+			noisy = add_multiplicative(inputs, mean=0.2, sigma=0.2)
+			noisy = add_gaussian(noisy, mean=0.1, sigma=0.08)
 		else:
-			noisy = add_gaussian(inputs, mean=gauss_mean, sigma=gauss_sigma)
-			noisy = add_multiplicative(noisy, mean=multi_mean, sigma=multi_sigma)
+			noisy = add_gaussian(inputs, mean=0.2, sigma=0.05)
+			noisy = add_multiplicative(noisy, mean=0.2, sigma=0.1)
    
 		noisy_batch[i, :, :, :] = noisy
   
