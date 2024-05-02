@@ -29,6 +29,7 @@ def main():
         SAVE_PATH = f'/home/akahige/Python Work/Denoising/archive/model_ckpts/fully_cnn_{test_id}/'
     
         print("================== Parameters ====================")
+        print(f"Test Number {test_id}")
         print(f"Epochs: {EPOCHS}")
         print(f"Batch Size: {BATCH}")
         print(f"Learning Rate: {LR}")
@@ -153,11 +154,6 @@ def main():
         
         plt.savefig(f'{SAVE_PATH}{test_id}_psnr.png')
         # plt.show()
-          
-    # load best model for testing
-    # model = AutoEncoder().to(device)
-    # model.load_state_dict(torch.load('/home/akahige/Python Work/Denoising/archive/model_ckpts/fully_cnn_1/1.pt')
-    # test(model, test_loader, device)
     
     
 if __name__ == "__main__":
