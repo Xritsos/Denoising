@@ -5,10 +5,8 @@ from train_val_test import test
 from dataloading import data_load
 from autoencoder_fully import AutoEncoder
 
-from sklearn.metrics import f1_score, accuracy_score
 from matplotlib import pyplot as plt
 from transformers import ViTFeatureExtractor, ViTForImageClassification
-import timm
 from torch import nn
 from torcheval.metrics.functional import multiclass_f1_score
 
