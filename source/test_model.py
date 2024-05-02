@@ -5,6 +5,44 @@ from train_val_test import test
 from dataloading import data_load
 from autoencoder_fully import AutoEncoder
 
+from sklearn.metrics import f1_score, accuracy_score
+from matplotlib import pyplot as plt
+from transformers import ViTFeatureExtractor, ViTForImageClassification
+import timm
+from torch import nn
+from torcheval.metrics.functional import multiclass_f1_score
+
+
+classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog',
+           'horse', 'ship', 'truck']
+
+
+def test_classifiers():
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    train_loader, val_loader, test_loader, _ = data_load(validation_size=100,
+                                                         batch_size=4, 
+                                                         visualize_split=False)
+    
+   
+    feature_extractor = ViTFeatureExtractor.from_pretrained('nateraw/vit-base-patch16-224-cifar10')
+    model = ViTForImageClassification.from_pretrained('nateraw/vit-base-patch16-224-cifar10').to(device)
+    f1 = torch.tensor([0.0]).to(device)
+    for imgs, labels in val_loader:
+        imgs = imgs.to(device) 
+        labels = labels.to(device)
+        
+        inputs = feature_extractor(images=total_set, return_tensors="pt", do_rescale=False).to(device)
+        preds = model(**inputs).logits.argmax(dim=1).to(device)
+        
+        f1 += multiclass_f1_score(preds, total_labels, num_classes=10, average='weighted').to(device)
+            
+        
+    total_f1 = f1 / len(val_loader)
+    
+    print(f"Final f1: {total_f1}")
+    
 
 def test_model():
     test_id = 3
@@ -35,5 +73,7 @@ def test_model():
     
 if __name__ == "__main__":
     
-    test_model()
+    # test_model()
+    print()
+    test_classifiers()
     
