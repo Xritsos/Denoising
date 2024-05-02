@@ -4,21 +4,30 @@ from matplotlib import pyplot as plt
 
 from noisy import add_noise
 from noise_metrics import PSNR
+from torcheval.metrics.functional import multiclass_f1_score
 
 LINE_UP = '\033[1A'
 LINE_CLEAR = '\x1b[2K'
 
-def train(net, train_loader, optimizer, loss_fn, device):
+def train(net, train_loader, optimizer, loss_fn, device, feature_extractor, clf):
     running_loss = torch.tensor([0.0]).to(device)
     running_psnr = torch.tensor([0.0]).to(device)
+    f1 = torch.tensor([0.0]).to(device)
     net.train()
     step = 0
-    for img, _ in train_loader:
+    for img, labels in train_loader:
         img = img.to(device)
-        image_noisy = add_noise(img)
-        image_noisy = image_noisy.to(device)
+        image_noisy = add_noise(img).to(device)
+        
         optimizer.zero_grad()
         output = net(image_noisy).to(device)
+        
+        labels = labels.to(device)
+        
+        inputs = feature_extractor(images=output, return_tensors="pt", do_rescale=False).to(device)
+        classified = clf(**inputs).logits.argmax(dim=1).to(device)
+        
+        f1 += multiclass_f1_score(classified, labels, num_classes=10).to(device)
         
         running_psnr += PSNR(img, output)
         
@@ -36,22 +45,32 @@ def train(net, train_loader, optimizer, loss_fn, device):
     
     psnr_score = running_psnr / len(train_loader)
     
-    print(f"Train Step {step}/{len(train_loader)} --- Train Loss: {float(train_loss.cpu())} ---- Train PSNR: {float(psnr_score.cpu())}")
+    f1_score = f1 / len(train_loader)
     
-    return train_loss, psnr_score
+    print(f"Train Step {step}/{len(train_loader)} --- Train Loss: {float(train_loss.cpu())} ---- Train PSNR: {float(psnr_score.cpu())} ---- Train F1: {float(f1_score.cpu())}")
+    
+    return train_loss, psnr_score, f1_score
 
 
-def val(net, val_loader, loss_fn, device):
+def val(net, val_loader, loss_fn, device, feature_extractor, clf):
     net.eval()
     with torch.no_grad(): 
         running_loss = torch.tensor([0.0]).to(device) 
         running_psnr = torch.tensor([0.0]).to(device)
+        f1 = torch.tensor([0.0]).to(device)
         step = 0
-        for img, _ in val_loader:
+        for img, labels in val_loader:
             img = img.to(device)
-            image_noisy = add_noise(img)
-            image_noisy = image_noisy.to(device)
+            image_noisy = add_noise(img).to(device)
+            
             output = net(image_noisy).to(device)
+            
+            labels = labels.to(device)
+            
+            inputs = feature_extractor(images=output, return_tensors="pt", do_rescale=False).to(device)
+            classified = clf(**inputs).logits.argmax(dim=1).to(device)
+        
+            f1 += multiclass_f1_score(classified, labels, num_classes=10).to(device)
             
             running_psnr += PSNR(img, output)
             
@@ -67,9 +86,11 @@ def val(net, val_loader, loss_fn, device):
         
         psnr_score = running_psnr / len(val_loader)
         
-    print(f"Val Step {step}/{len(val_loader)} ------- Val Loss:   {float(val_loss.cpu())} ---- Val PSNR: {float(psnr_score.cpu())}")
+        f1_score = f1 / len(val_loader)
+        
+    print(f"Val Step {step}/{len(val_loader)} ------- Val Loss:   {float(val_loss.cpu())} ---- Val PSNR: {float(psnr_score.cpu())} ---- Val F1: {float(f1.cpu())}")
     
-    return val_loss, psnr_score
+    return val_loss, psnr_score, f1_score
 
 
 def test(net, test_loader, device):
