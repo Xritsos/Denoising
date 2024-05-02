@@ -1,5 +1,6 @@
 import torch
 import torchvision
+import numpy as np
 from torch.utils.data import random_split
 import torchvision.transforms as transforms
 from torch.utils.data.dataloader import DataLoader
@@ -8,7 +9,7 @@ from plotting import visualize_sets
 
 
     
-def data_load(validation_size=10000, batch_size=256, visualize_split=False):
+def data_load(validation_size=5000, training_size=20000, batch_size=256, visualize_split=False):
     
     torch.manual_seed(7)
     
@@ -32,6 +33,12 @@ def data_load(validation_size=10000, batch_size=256, visualize_split=False):
     
     # split to train and validation sets
     train_set, val_set = random_split(data_set, [train_size, validation_size])
+    
+    
+    # keep only a trainig size of your preference
+    idxs = np.random.randint(0, len(train_set), training_size)
+    
+    train_set = torch.utils.data.Subset(train_set, idxs)
     
     print()
     print(f"Train Set Size: {len(train_set)}")
