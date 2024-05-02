@@ -122,7 +122,7 @@ class AutoEncoder(nn.Module):
         
         # print(f"Output of third dec layer: {x.shape}")
         
-        x = F.sigmoid(self.dec4(x))
+        x = F.relu(self.dec4(x))
         
         # print(f"Output of fourth dec layer: {x.shape}")
         
