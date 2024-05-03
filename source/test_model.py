@@ -26,16 +26,16 @@ def test_classifiers():
    
     feature_extractor = ViTFeatureExtractor.from_pretrained('nateraw/vit-base-patch16-224-cifar10')
     model = ViTForImageClassification.from_pretrained('nateraw/vit-base-patch16-224-cifar10').to(device)
-    f1 = torch.tensor([0.0]).to(device)
-    for imgs, labels in val_loader:
-        imgs = imgs.to(device) 
-        labels = labels.to(device)
+    # f1 = torch.tensor([0.0]).to(device)
+    # for imgs, labels in val_loader:
+    #     imgs = imgs.to(device) 
+    #     labels = labels.to(device)
         
-        inputs = feature_extractor(images=total_set, return_tensors="pt", do_rescale=False).to(device)
-        preds = model(**inputs).logits.argmax(dim=1).to(device)
+    inputs = feature_extractor(images=total_set, return_tensors="pt", do_rescale=False).to(device)
+    preds = model(**inputs).logits.argmax(dim=1).to(device)
+    
+    f1 += multiclass_f1_score(preds, total_labels, num_classes=10, average='weighted').to(device)
         
-        f1 += multiclass_f1_score(preds, total_labels, num_classes=10, average='weighted').to(device)
-            
         
     total_f1 = f1 / len(val_loader)
     
@@ -43,7 +43,7 @@ def test_classifiers():
     
 
 def test_model():
-    test_id = 3
+    test_id = 18
     row = test_id - 1
     df = pd.read_csv('/home/akahige/Python Work/Denoising/tests_fully.csv')
     
@@ -52,7 +52,7 @@ def test_model():
     LR = float(df['learning_rate'][row])
     AMSGRAD = bool(df['amsgrad'][row])
     VAL_SIZE = 5000
-    
+    BATCH = 32
     print(f"Val Loss: {df['Val Loss'][row]}")
     print(f"Val PSNR: {df['Val PSNR'][row]}")
     
@@ -71,7 +71,7 @@ def test_model():
     
 if __name__ == "__main__":
     
-    # test_model()
-    print()
-    test_classifiers()
+    test_model()
+    # print()
+    # test_classifiers()
     
