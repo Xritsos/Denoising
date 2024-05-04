@@ -16,19 +16,6 @@ def add_gaussian(img, mean, sigma):
 
 	return noisy
 
-# def add_poisson(img):
-#     torch.manual_seed(7)
-    
-#     noisy = torch.clone(img).to(img.device)
-#     noisy = noisy.permute((1, 2, 0)) * 255.
-#     noisy = torch.from_numpy(apply_poisson_noise(noisy.cpu(), seed=7)).to(img.device) / 255.
-    
-#     noisy = noisy.permute((2, 0, 1))
-#     noisy = torch.clip(noisy, 0., 1.)
-    
-#     return noisy
-
-
 
 def add_multiplicative(img, mean, sigma):
 
@@ -44,11 +31,6 @@ def add_multiplicative(img, mean, sigma):
 def add_noise(batch):
  
 	noisy_batch = torch.clone(batch).to(batch.device)
- 
-	multi_mean = torch.tensor(0.5)
-	multi_sigma = torch.tensor(0.3)
-	gauss_mean = torch.tensor(0.3)
-	gauss_sigma = torch.tensor(0.05)
  
 	for i in range(noisy_batch.shape[0]):
 		inputs = batch[i, :, :, :].to(batch.device)
