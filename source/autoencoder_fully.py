@@ -32,11 +32,11 @@ class AutoEncoder(nn.Module):
         
         self.batch_enc4 = nn.BatchNorm2d(16, affine=True)
         
-        # self.enc5 = nn.Conv2d(in_channels=16, out_channels=16, kernel_size=(2, 2),
-        #                       stride=(2, 2), padding='same', dilation=1, groups=1,
+        # self.enc5 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(3, 3),
+        #                       stride=(1, 1), padding='same', dilation=1, groups=1,
         #                       bias=True, padding_mode='zeros')
         
-        # self.batch_enc5 = nn.BatchNorm2d(16, affine=True)
+        # self.batch_enc5 = nn.BatchNorm2d(32, affine=True)
         
         # self.enc6 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=(2, 2),
         #                       stride=(2, 2), padding='valid', dilation=1, groups=1,
@@ -44,17 +44,11 @@ class AutoEncoder(nn.Module):
         
         # self.batch_enc6 = nn.BatchNorm2d(32, affine=True)
         
-        # self.enc7 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3),
+        # self.enc7 = nn.Conv2d(in_channels=16, out_channels=8, kernel_size=(3, 3),
         #                       stride=(1, 1), padding='same', dilation=1, groups=1,
         #                       bias=True, padding_mode='zeros')
         
-        # self.batch_enc7 = nn.BatchNorm2d(64, affine=True)
-        
-        # self.enc8 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=(3, 3),
-        #                       stride=(1, 1), padding='same', dilation=1, groups=1,
-        #                       bias=True, padding_mode='zeros')
-        
-        # self.batch_enc8 = nn.BatchNorm2d(128, affine=True)
+        # self.batch_enc7 = nn.BatchNorm2d(8, affine=True)
         
         # decoder 
         self.dec1 = nn.ConvTranspose2d(in_channels=16, out_channels=16, 
@@ -87,33 +81,25 @@ class AutoEncoder(nn.Module):
                                        groups=1, bias=True, 
                                        dilation=1, padding_mode='zeros')
         
-        # self.batch_dec4 = nn.BatchNorm2d(8, affine=True)
+        # self.batch_dec4 = nn.BatchNorm2d(32, affine=True)
         
-        # self.dec5 = nn.ConvTranspose2d(in_channels=8, out_channels=8, 
-        #                                kernel_size=(2, 2), stride=(2, 2), 
-        #                                padding=0, output_padding=0, 
-        #                                groups=1, bias=True, 
-        #                                dilation=1, padding_mode='zeros')
-        
-        # self.batch_dec5 = nn.BatchNorm2d(8, affine=True)
-        
-        # self.dec6 = nn.ConvTranspose2d(in_channels=8, out_channels=3, 
+        # self.dec5 = nn.ConvTranspose2d(in_channels=32, out_channels=64, 
         #                                kernel_size=(3, 3), stride=(1, 1), 
         #                                padding=1, output_padding=0, 
         #                                groups=1, bias=True, 
         #                                dilation=1, padding_mode='zeros')
         
-        # self.batch_dec6 = nn.BatchNorm2d(8, affine=True)
+        # self.batch_dec5 = nn.BatchNorm2d(64, affine=True)
         
-        # self.dec7 = nn.ConvTranspose2d(in_channels=8, out_channels=8, 
+        # self.dec6 = nn.ConvTranspose2d(in_channels=64, out_channels=64, 
         #                                kernel_size=(2, 2), stride=(2, 2), 
         #                                padding=0, output_padding=0, 
         #                                groups=1, bias=True, 
         #                                dilation=1, padding_mode='zeros')
         
-        # self.batch_dec7 = nn.BatchNorm2d(8, affine=True)
+        # self.batch_dec6 = nn.BatchNorm2d(64, affine=True)
         
-        # self.dec8 = nn.ConvTranspose2d(in_channels=8, out_channels=3, 
+        # self.dec7 = nn.ConvTranspose2d(in_channels=64, out_channels=3, 
         #                                kernel_size=(3, 3), stride=(1, 1), 
         #                                padding=1, output_padding=0, 
         #                                groups=1, bias=True, 
@@ -175,12 +161,6 @@ class AutoEncoder(nn.Module):
         
         # x = F.relu(x)
         
-        # x = self.enc8(x)
-        
-        # x = self.batch_enc8(x)
-        
-        # x = F.relu(x)
-        
         # print(f"Output of seventh layer: {x.shape}")
         
         x = self.dec1(x)
@@ -209,42 +189,22 @@ class AutoEncoder(nn.Module):
         
         x = self.dec4(x)
         
-        # x = self.batch_dec4(x)
-        
-        # x = F.relu(x)
-        
         # print(f"Output of fourth dec layer: {x.shape}")
         
-        # x = self.dec5(x)
-        
-        # x = self.batch_dec5(x)
-        
-        # x = F.relu(x)
+        # x = F.relu(self.dec5(x))
         
         # print(f"Output of fifth dec layer: {x.shape}")
         
-        # x = self.dec6(x)
+        # x = F.relu(self.dec6(x))
         
-        x = F.sigmoid(x)
+        # print(f"Output of sixth dec layer: {x.shape}")
         
-        # x = self.batch_dec6(x)
-        
-        # x = F.relu(x)
-        
-        # # print(f"Output of sixth dec layer: {x.shape}")
-        
-        # x = self.dec7(x)
-        
-        # x = self.batch_dec7(x)
-        
-        # x = F.relu(x)
-        
-        # x = self.dec8(x)
-        
-        # x = F.sigmoid(x)
+        # x = F.sigmoid(self.dec7(x))
         
         # print(f"Output of seventh dec layer: {x.shape}")
         
         # exit()
+        
+        x = F.sigmoid(x)
         
         return x
