@@ -6,5 +6,4 @@ torch==2.2.2
 torcheval==0.0.7
 torchsummary==1.5.1
 torchvision==0.17.2
-torchviz==0.0.2
 transformers==4.40.1
