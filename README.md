@@ -8,13 +8,17 @@ In the `source/main.py` file one can train the model based on the specifications
 
 ## Results
 In the figures below it can be seen the output of the model with the final image distribution per channel.
-![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output.png)
-![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output_kdes.png)
+
+
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output.png" width="800" height="350" />
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output_kdes.png" width="800" height="350" />
 
 ## Noise
 For the training two different types of noises were used and their combinations. More of the noise types can be found on the `source/noisy.py` file.
-![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noise_types.png)
-![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noise_types_kdes.png)
+
+
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noise_types.png" width="1000" height="200" />
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noise_types_kdes.png" width="1000" height="400" />
 
 ## Specifications
 Processor: Intel® CoreTM i7-8550U, 4 GHz (turbo mode)  
