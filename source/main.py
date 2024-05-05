@@ -9,10 +9,8 @@ from torchsummary import summary
 from matplotlib import pyplot as plt
 
 from dataloading import data_load
-from autoencoder_fully import AutoEncoder
+from autoencoder_fully import Model_C, Model_B
 from train_val_test import train, val, test
-
-from transformers import ViTForImageClassification, ViTImageProcessor
 
 
 def main():
@@ -20,7 +18,7 @@ def main():
     df = pd.read_csv('/home/akahige/Python Work/Denoising/tests_fully.csv')
     
     test_ids = list(df['test_id'])
-    test_ids = [18]
+    test_ids = [38]
     
     for test_id in test_ids:
         row = int(test_id - 1)
@@ -30,6 +28,9 @@ def main():
         AMSGRAD = bool(df['amsgrad'][row])
         VAL_SIZE = int(df['Val Size'][row])
         TRAIN_SIZE = int(df['Train Size'][row])
+        WDECAY = float(df['weight_decay'][row])
+        BETA_1 = float(df['beta_1'][row])
+        BETA_2 = float(df['beta_2'][row])
         SAVE_PATH = f'/home/akahige/Python Work/Denoising/archive/model_ckpts/fully_cnn_{test_id}/'
         print("================== Parameters ====================")
         print(f"Test Number {test_id}")
@@ -37,6 +38,9 @@ def main():
         print(f"Batch Size: {BATCH}")
         print(f"Learning Rate: {LR}")
         print(f"Use AmsGrad: {AMSGRAD}")
+        print(f"Weight Decay: {WDECAY}")
+        print(f"Beta 1: {BETA_1}")
+        print(f"Beta 2: {BETA_2}")
         print(f"Save Destination: {SAVE_PATH}")
         print("==================================================")
         
@@ -50,12 +54,12 @@ def main():
         train_loader, val_loader, test_loader, _ = data_load(validation_size=VAL_SIZE,
                                                              training_size=TRAIN_SIZE,
                                                              batch_size=BATCH, 
-                                                             visualize_split=False)
+                                                             visualize_split=True)
         print()
         print(f"Available Device: {device}")
         print("Proceeding with training...")
         
-        model = AutoEncoder().to(device)
+        model = Model_C().to(device)
         
         # summary(model, (3, 32, 32))
         # exit()
@@ -63,7 +67,13 @@ def main():
         loss_fn = nn.MSELoss()
         loss_fn.to(device)
         
-        optimizer = torch.optim.Adam(model.parameters(), lr=LR, amsgrad=AMSGRAD)
+        optimizer = torch.optim.Adam(model.parameters(), lr=LR, 
+                                     amsgrad=AMSGRAD,
+                                     betas=(BETA_1, BETA_2),
+                                     weight_decay=WDECAY)
+        
+        # optimizer = torch.optim.SGD(model.parameters(), lr=LR, nesterov=True,
+        #                             momentum=0.5)
         
         train_loss = []
         validation_loss = []
@@ -72,6 +82,7 @@ def main():
         train_f1 = []
         validation_f1 = []
         previous_loss = []
+        at_train_loss = []
         psnr = []
         f1 = []
         start_total_time = time.time()
@@ -106,11 +117,15 @@ def main():
             
             if epoch == 0:
                 previous_loss.append(val_loss)
+                at_train_loss.append(tr_loss)
                 psnr.append(val_psnr)
             elif epoch > 0:
                 if val_loss < previous_loss[0]:
                     previous_loss.pop()
                     previous_loss.append(val_loss)
+                    
+                    at_train_loss.pop()
+                    at_train_loss.append(tr_loss)
                     
                     psnr.pop()
                     psnr.append(val_psnr)
@@ -130,6 +145,7 @@ def main():
         print("==========================================================")
         
         print(f"Loss saved: {float(previous_loss[0].cpu())}")
+        print(f"At Training Loss: {float(at_train_loss[0].cpu())}")
         print(f"PSNR saved: {float(psnr[0].cpu())}")
         
         df.loc[row, 'Val Loss'] = float(previous_loss[0].cpu())
@@ -161,7 +177,7 @@ def main():
         plt.legend()
         
         plt.savefig(f'{SAVE_PATH}{test_id}_psnr.png')
-        # plt.show()
+
     
     
 if __name__ == "__main__":
