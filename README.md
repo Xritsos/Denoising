@@ -7,10 +7,14 @@ This project focuses on developing a denoising fully CNN Auto-encoder based arch
 In the `source/main.py` file one can train the model based on the specifications provided by the `tests_fully.csv`. The noise is added using the `source/noisy.py` file. The architectures developed can be found on  `source/model_b.py` and `source/model_c.py`. Model-C is the best model developed so far, but it can be made even better. All progress steps are logged on the `Notes_on_training.odt` file, so anyone can have an overview over the whole process. The best model checkpoints (test ids: 35, 37 and 38 as refered in `tests_fully.csv`) can be found on the `archive` folder. All test results, that is Loss and PSNR plots can be found there as well, but only for the three best models there exist the .pt pytorch model checkpoints.
 
 ## Results
-![alt text]()
+In the figures below it can be seen the output of the model with the final image distribution per channel.
+![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output.png)
+![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output_kdes.png)
 
 ## Noise
-![alt text]()
+For the training two different types of noises were used and their combinations. More of the noise types can be found on the `source/noisy.py` file.
+![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noise_types.png)
+![alt text](https://github.com/Xritsos/Denoising/blob/main/images/Noise_types_kdes.png)
 
 ## Specifications
 Processor: Intel® CoreTM i7-8550U, 4 GHz (turbo mode)  
