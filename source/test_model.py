@@ -1,14 +1,14 @@
 import torch
 import pandas as pd
+from torch import nn
+from torcheval.metrics.functional import multiclass_f1_score
+from transformers import ViTFeatureExtractor, ViTForImageClassification
 
 from train_val_test import test
 from dataloading import data_load
-from autoencoder_fully import AutoEncoder
-
-from matplotlib import pyplot as plt
-from transformers import ViTFeatureExtractor, ViTForImageClassification
-from torch import nn
-from torcheval.metrics.functional import multiclass_f1_score
+from model_c import Model_C
+from model_b import Model_B
+from noisy import add_noise
 
 
 classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog',
@@ -16,36 +16,45 @@ classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog',
 
 
 def test_classifiers():
-    
+    test_id = 37
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     train_loader, val_loader, test_loader, _ = data_load(validation_size=100,
                                                          batch_size=4, 
                                                          visualize_split=False)
     
+    # load best model for testing
+    model = Model_C().to(device)
+    model.load_state_dict(torch.load(f'./archive/model_ckpts/fully_cnn_{test_id}/{test_id}.pt'))
+    model.eval()
    
     feature_extractor = ViTFeatureExtractor.from_pretrained('nateraw/vit-base-patch16-224-cifar10')
-    model = ViTForImageClassification.from_pretrained('nateraw/vit-base-patch16-224-cifar10').to(device)
-    # f1 = torch.tensor([0.0]).to(device)
-    # for imgs, labels in val_loader:
-    #     imgs = imgs.to(device) 
-    #     labels = labels.to(device)
-        
-    inputs = feature_extractor(images=total_set, return_tensors="pt", do_rescale=False).to(device)
-    preds = model(**inputs).logits.argmax(dim=1).to(device)
+    classifier = ViTForImageClassification.from_pretrained('nateraw/vit-base-patch16-224-cifar10').to(device)
+    f1 = torch.tensor([0.0]).to(device)
     
-    f1 += multiclass_f1_score(preds, total_labels, num_classes=10, average='weighted').to(device)
+    for imgs, labels in test_loader:
+        imgs = imgs.to(device) 
+        labels = labels.to(device)
+        
+        noisy = add_noise(imgs).to(device)
+        
+        output = model(noisy)
+        
+        inputs = feature_extractor(images=output, return_tensors="pt", do_rescale=False).to(device)
+        preds = classifier(**inputs).logits.argmax(dim=1).to(device)
+        
+        f1 += multiclass_f1_score(preds, labels, num_classes=10, average='macro').to(device)
         
         
-    total_f1 = f1 / len(val_loader)
+    total_f1 = f1 / len(test_loader)
     
     print(f"Final f1: {total_f1}")
     
 
 def test_model():
-    test_id = 18
+    test_id = 36
     row = test_id - 1
-    df = pd.read_csv('/home/akahige/Python Work/Denoising/tests_fully.csv')
+    df = pd.read_csv('./tests_fully.csv')
     
     EPOCHS = int(df['epochs'][row])
     BATCH = int(df['batch_size'][row])
@@ -64,14 +73,14 @@ def test_model():
     
     # load best model for testing
     model = AutoEncoder().to(device)
-    model.load_state_dict(torch.load(f'/home/akahige/Python Work/Denoising/archive/model_ckpts/fully_cnn_{test_id}/{test_id}.pt'))
+    model.load_state_dict(torch.load(f'./archive/model_ckpts/fully_cnn_{test_id}/{test_id}.pt'))
    
     test(model, test_loader, device)
     
     
 if __name__ == "__main__":
     
-    test_model()
+    # test_model()
     # print()
-    # test_classifiers()
+    test_classifiers()
     
