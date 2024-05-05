@@ -1,15 +1,12 @@
 import torch
-from torchviz import make_dot
-from matplotlib import pyplot as plt
 
 from noisy import add_noise
 from noise_metrics import PSNR
-from torcheval.metrics.functional import multiclass_f1_score
-from transformers import ViTFeatureExtractor, ViTForImageClassification
 
 
 LINE_UP = '\033[1A'
 LINE_CLEAR = '\x1b[2K'
+
 
 def train(net, train_loader, optimizer, loss_fn, device):
     running_loss = torch.tensor([0.0]).to(device)
@@ -76,15 +73,6 @@ def val(net, val_loader, loss_fn, device):
 
 
 def test(net, test_loader, device):
-    
-    # raise ValueError("Forgot to change the MEAN and STD values based on the normalization chosen!")
-    # net.eval()
-    # MEAN = torch.tensor([0.5, 0.5, 0.5]).to(device)
-    # STD = torch.tensor([0.5, 0.5, 0.5]).to(device)
-    
-    # feature_extractor = ViTFeatureExtractor.from_pretrained('nateraw/vit-base-patch16-224-cifar10')
-    # model = ViTForImageClassification.from_pretrained('nateraw/vit-base-patch16-224-cifar10').to(device)
-    # f1 = torch.tensor([0.0]).to(device)
     with torch.no_grad():
         for img, labels in test_loader:
             img = img.to(device)
@@ -105,30 +93,3 @@ def test(net, test_loader, device):
             
             exit()
             
-    #         inputs = feature_extractor(images=output, return_tensors="pt", do_rescale=False).to(device)
-    #         preds = model(**inputs).logits.argmax(dim=1).to(device)
-            
-    #         f1 += multiclass_f1_score(preds, labels, num_classes=10, average='weighted').to(device)
-            
-    #         print(f"Predictions: {preds.cpu()}")
-    #         print(f"Truth: {labels.cpu()}")
-                
-        
-    # total_f1 = f1 / len(test_loader)
-            # print(img[0, :, :, :].permute(1, 2, 0).shape)
-            # exit()
-    # print(f"Final f1: {total_f1}")
-            
-            # img = img[33] * STD[:, None, None] + MEAN[:, None, None]
-            # img = noisy[33]
-            # img = img.permute(1, 2, 0).cpu()
-            # for i in range(img.shape[0]):
-            #     fig, axs = plt.subplots(1, 3, figsize=(10, 10))
-            #     axs[0].imshow(img[i, :, :, :].permute(1, 2, 0).cpu())
-            #     axs[1].imshow(noisy[i, :, :, :].permute(1, 2, 0).cpu())
-            #     axs[2].imshow(output[i, :, :, :].permute(1, 2, 0).cpu())
-            #     plt.show()
-            # exit()
-        
-        
-    
