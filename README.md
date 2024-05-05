@@ -11,6 +11,10 @@ In the `source/main.py` file one can train the model based on the specifications
 ## Noise
 
 ## Specifications
+Processor: Intel® CoreTM i7-8550U, 4 GHz (turbo mode)
+GPU: Nvidia MX150, 2 GB
+RAM: 16 GB
+Operating System: Ubuntu 23.10
 
 ## Contact
 e-mail: chrispsyc@yahoo.com
