@@ -35,4 +35,5 @@ test_id,batch_size,learning_rate,epochs,amsgrad,Val Loss,Val PSNR,Val F1,Train S
 34,32,0.1,600,False,0.0036957522388547,24.3366432189941,,20000,5000,0.0,0.0,0.0,"model restored to test 27, trying to get lowest loss/ trying SGD"
 35,32,0.005,600,False,0.0031996848993003,24.9634895324707,,20000,5000,0.0,0.9,0.999,"model restored to test 27, trying to get lowest loss/ Adam restored"
 36,64,0.001,100,False,0.002273611491546,26.4434070587158,,30000,10000,0.0,0.9,0.999,model increased depth same number of layers / Adam
-37,64,0.003,200,False,0.002193672116845846,26.60099983215332,,20000,5000,0.0,0.9,0.999,"model same as above, trying to get lowest loss"
+37,64,0.003,200,False,0.0021936721168458,26.6009998321533,,20000,5000,0.0,0.9,0.999,"model same as above, trying to get lowest loss"
+38,128,0.005,300,False,0.0020209290087223053,26.948633193969727,,40000,10000,0.0,0.9,0.999,"model same as above, trying to get lowest loss"
