@@ -9,7 +9,8 @@ from torchsummary import summary
 from matplotlib import pyplot as plt
 
 from dataloading import data_load
-from autoencoder_fully import Model_C, Model_B
+from model_c import Model_C
+from model_b import Model_B
 from train_val_test import train, val, test
 
 
