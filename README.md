@@ -10,14 +10,14 @@ In the `source/main.py` file one can train the model based on the specifications
 In the figures below it can be seen the output of the model with the final image distribution per channel.
 
 
-<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output.png" width="800" height="350" />
-<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output_kdes.png" width="800" height="350" />
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output.png" width="800" height="250" />
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noisy_output_kdes.png" width="800" height="250" />
 
 ## Noise
 For the training two different types of noises were used and their combinations. More of the noise types can be found on the `source/noisy.py` file.
 
 
-<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noise_types.png" width="1000" height="200" />
+<img src="https://github.com/Xritsos/Denoising/blob/main/images/Noise_types.png" width="1000" height="150" />
 <img src="https://github.com/Xritsos/Denoising/blob/main/images/Noise_types_kdes.png" width="1000" height="400" />
 
 ## Specifications
