@@ -1,4 +1,4 @@
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-360/)                                                                                       ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 
 # Image Denoising on CIFAR-10
 This project focuses on developing a denoising fully CNN Auto-encoder based architecture, on the CIFAR-10 dataset. Different architectures are examined and finally two of them are tested using a Visual Transformer fine tuned on the CIFAR-10 dataset. More details about this work can be found on the `Denoise.pdf` file.
